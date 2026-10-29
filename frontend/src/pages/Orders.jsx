@@ -15,7 +15,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-const API_URL = "http://127.0.0.1:8001/api/orders/";
+const API_URL = "http://https://bizpilot-api.vercel.app/api/orders/";
 
 const initialForm = {
   customer_name: "",

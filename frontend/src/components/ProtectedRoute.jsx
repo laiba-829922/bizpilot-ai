@@ -17,7 +17,7 @@ export default function ProtectedRoute() {
 
       try {
         const response = await fetch(
-          "http://127.0.0.1:8001/api/auth/token/verify/",
+          "http://https://bizpilot-api.vercel.app/api/auth/token/verify/",
           {
             method: "POST",
             headers: {

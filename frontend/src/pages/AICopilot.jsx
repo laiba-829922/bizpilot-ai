@@ -29,7 +29,7 @@ import Sidebar from "../components/Sidebar";
 
 const CHAT_STORAGE_KEY = "bizpilot_ai_chats";
 const EXPENSE_STORAGE_KEY = "bizpilot_expenses";
-const ORDERS_API = "http://127.0.0.1:8001/api/orders/";
+const ORDERS_API = "http://https://bizpilot-api.vercel.app/api/orders/";
 
 const SUGGESTIONS = [
   {
