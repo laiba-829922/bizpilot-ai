@@ -18,7 +18,7 @@ import StatCard from "../components/dashboard/StatCard";
 import RecentOrders from "../components/dashboard/RecentOrders";
 import RevenueChart from "../components/dashboard/RevenueChart";
 
-const API_URL = "http://https://bizpilot-api.vercel.app/api/orders/";
+const API_URL = "https://bizpilot-api.vercel.app/api/orders/";
 
 const formatMoney = (value) =>
   `Rs. ${Number(value).toLocaleString("en-PK", {

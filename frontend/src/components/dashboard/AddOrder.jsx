@@ -16,7 +16,7 @@ export default function AddOrder() {
     try {
       const token = sessionStorage.getItem("access_token");
 
-      const response = await fetch("http://https://bizpilot-api.vercel.app/api/orders/", {
+      const response = await fetch("https://bizpilot-api.vercel.app/api/orders/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

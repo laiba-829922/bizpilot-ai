@@ -62,7 +62,7 @@ export default function Signup() {
 
   try {
     const response = await fetch(
-      "http://https://bizpilot-api.vercel.app/api/auth/register/",
+      "https://bizpilot-api.vercel.app/api/auth/register/",
       {
         method: "POST",
         headers: {

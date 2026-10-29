@@ -34,7 +34,7 @@ export default function Login() {
 
   try {
     const response = await fetch(
-      "http://https://bizpilot-api.vercel.app/api/auth/login/",
+      "https://bizpilot-api.vercel.app/api/auth/login/",
       {
         method: "POST",
         headers: {

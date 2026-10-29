@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://https://bizpilot-api.vercel.app/api/orders/";
+const API_URL = "https://bizpilot-api.vercel.app/api/orders/";
 
 const formatAmount = (amount) => {
   return `Rs. ${Number(amount || 0).toLocaleString("en-PK")}`;

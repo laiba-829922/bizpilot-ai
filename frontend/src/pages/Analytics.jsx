@@ -24,7 +24,7 @@ import {
 import Sidebar from "../components/Sidebar";
 import { useTheme } from "../context/ThemeContext";
 
-const API_URL = "http://https://bizpilot-api.vercel.app/api/orders/";
+const API_URL = "https://bizpilot-api.vercel.app/api/orders/";
 
 const STATUS_COLORS = {
   pending: "#EAB308",
