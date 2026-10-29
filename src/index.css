@@ -1,0 +1,207 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+/* =====================================
+   BIZPILOT AI — PREMIUM DESIGN SYSTEM
+   Black • Yellow • White
+===================================== */
+
+/* LIGHT MODE */
+
+:root {
+  color-scheme: light;
+
+  --bg-primary: #F7F7F4;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #EFEFEC;
+
+  --text-primary: #111111;
+  --text-secondary: #666970;
+
+  --accent: #EAB308;
+  --accent-soft: #FFF6CC;
+  --accent-foreground: #111111;
+
+  --border-color: #E5E5E0;
+
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.045);
+}
+
+/* DARK MODE */
+
+:root.dark {
+  color-scheme: dark;
+
+  --bg-primary: #090A0C;
+  --bg-surface: #181A1F;
+  --bg-elevated: #22242A;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+
+  --accent: #FACC15;
+  --accent-soft: #302B13;
+  --accent-foreground: #090A0C;
+
+  --border-color: #303239;
+
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.22);
+}
+
+/* TAILWIND THEME */
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+
+  --color-primary-text: var(--text-primary);
+  --color-muted-text: var(--text-secondary);
+
+  --color-brand: var(--accent);
+  --color-brand-soft: var(--accent-soft);
+  --color-brand-foreground: var(--accent-foreground);
+
+  --color-outline: var(--border-color);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* GLOBAL STYLES */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* TEXT SELECTION */
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* PREMIUM SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* SMOOTH TRANSITIONS */
+
+a,
+button,
+input {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+
+
+
+/* =====================================
+   BIZPILOT AI — SCROLL REVEAL
+===================================== */
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(45px);
+  filter: blur(5px);
+
+  transition:
+    opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 850ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Staggered feature cards */
+
+#features .scroll-reveal:nth-child(1) {
+  transition-delay: 100ms;
+}
+
+#features .scroll-reveal:nth-child(2) {
+  transition-delay: 200ms;
+}
+
+#features .scroll-reveal:nth-child(3) {
+  transition-delay: 300ms;
+}
+
+/* Respect reduced motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
