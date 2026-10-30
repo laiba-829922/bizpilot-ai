@@ -27,6 +27,36 @@ import {
 import Sidebar from "../components/Sidebar";
 
 const STORAGE_KEY = "bizpilot_expenses";
+const EXPENSES_API = "https://bizpilot-api.vercel.app/api/expenses/";
+
+async function expenseRequest(url, options = {}) {
+  const token = sessionStorage.getItem("access_token");
+
+  if (!token) {
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Session expired. Please log in again.");
+    }
+
+    throw new Error(`Expense request failed (${response.status}).`);
+  }
+
+  if (response.status === 204) return null;
+
+  return response.json();
+}
 
 const CATEGORIES = [
   "Rent",
@@ -300,6 +330,35 @@ export default function Expenses() {
   const [form, setForm] = useState(initialForm);
   const [formError, setFormError] = useState("");
   const [storageError, setStorageError] = useState("");
+  const [apiExpenses, setApiExpenses] = useState([]);
+const [apiLoading, setApiLoading] = useState(false);
+const [apiError, setApiError] = useState("");
+useEffect(() => {
+  fetchExpenses();
+}, []);
+
+useEffect(() => {
+  console.log("API Expenses:", apiExpenses);
+  console.log("API Loading:", apiLoading);
+  console.log("API Error:", apiError);
+}, [apiExpenses, apiLoading, apiError]);
+
+
+const fetchExpenses = async () => {
+  setApiLoading(true);
+  setApiError("");
+
+  try {
+    const data = await expenseRequest(EXPENSES_API);
+
+    setApiExpenses(Array.isArray(data) ? data : []);
+  } catch (error) {
+    setApiError(error.message);
+  } finally {
+    setApiLoading(false);
+  }
+};ab agy ?
+
 
   useEffect(() => {
     try {
