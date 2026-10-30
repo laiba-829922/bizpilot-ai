@@ -5,8 +5,10 @@ from .models import Expense
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
+
         fields = [
             "id",
+            "client_id",
             "title",
             "amount",
             "category",
@@ -14,4 +16,8 @@ class ExpenseSerializer(serializers.ModelSerializer):
             "description",
             "created_at",
         ]
-        read_only_fields = ["id", "created_at"]
+
+        read_only_fields = [
+            "id",
+            "created_at",
+        ]

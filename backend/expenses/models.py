@@ -18,8 +18,20 @@ class Expense(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    client_id = models.UUIDField(
+        null=True,
+        blank=True
+    )
+
     class Meta:
         ordering = ["-date", "-created_at"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "client_id"],
+                name="unique_user_expense_client_id"
+            )
+        ]
 
     def __str__(self):
         return f"{self.title} - {self.amount}"
