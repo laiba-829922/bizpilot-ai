@@ -321,6 +321,7 @@ function ExpenseModal({
 
 export default function Expenses() {
   const [expenses, setExpenses] = useState(loadExpenses);
+  const [expensesLoaded, setExpensesLoaded] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("All");
@@ -351,7 +352,14 @@ const fetchExpenses = async () => {
   try {
     const data = await expenseRequest(EXPENSES_API);
 
-    setApiExpenses(Array.isArray(data) ? data : []);
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid expenses data received.");
+    }
+
+    setApiExpenses(data);
+setExpenses(data);
+setExpensesLoaded(true);
+
   } catch (error) {
     setApiError(error.message);
   } finally {
@@ -360,16 +368,16 @@ const fetchExpenses = async () => {
 };
 
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
-      setStorageError("");
-    } catch {
-      setStorageError(
-        "Unable to save expenses. Browser storage may be full or disabled."
-      );
-    }
-  }, [expenses]);
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  //     setStorageError("");
+  //   } catch {
+  //     setStorageError(
+  //       "Unable to save expenses. Browser storage may be full or disabled."
+  //     );
+  //   }
+  // }, [expenses]);
 
   const filteredExpenses = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -475,64 +483,93 @@ const fetchExpenses = async () => {
     setFormError("");
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    const amount = Number(form.amount);
+  const amount = Number(form.amount);
 
-    if (
-      !form.title.trim() ||
-      !form.date ||
-      !CATEGORIES.includes(form.category) ||
-      !Number.isFinite(amount) ||
-      amount <= 0
-    ) {
-      setFormError("Please enter valid expense details.");
-      return;
-    }
+  if (
+    !form.title.trim() ||
+    !form.date ||
+    !CATEGORIES.includes(form.category) ||
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ) {
+    setFormError("Please enter valid expense details.");
+    return;
+  }
 
-    const cleaned = {
-      title: form.title.trim(),
-      amount,
-      category: form.category,
-      date: form.date,
-      description: form.description.trim(),
-    };
-
-    if (editingExpense) {
-      setExpenses((previous) =>
-        previous.map((expense) =>
-          expense.id === editingExpense.id
-            ? { ...expense, ...cleaned }
-            : expense
-        )
-      );
-    } else {
-      setExpenses((previous) => [
-        {
-          id: crypto.randomUUID(),
-          ...cleaned,
-          createdAt: new Date().toISOString(),
-        },
-        ...previous,
-      ]);
-    }
-
-    closeModal();
+  const cleaned = {
+    title: form.title.trim(),
+    amount,
+    category: form.category,
+    date: form.date,
+    description: form.description.trim(),
   };
 
-  const handleDelete = (expense) => {
-    const confirmed = window.confirm(
-      `Delete "${expense.title}" expense?`
-    );
+  setFormError("");
 
-    if (!confirmed) return;
+  try {
+    if (editingExpense) {
+  const updatedExpense = await expenseRequest(
+    `${EXPENSES_API}${editingExpense.id}/`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(cleaned),
+    }
+  );
+
+  setExpenses((previous) =>
+    previous.map((expense) =>
+      expense.id === editingExpense.id
+        ? updatedExpense
+        : expense
+    )
+  );
+
+  closeModal();
+  return;
+}
+
+    const savedExpense = await expenseRequest(EXPENSES_API, {
+      method: "POST",
+      body: JSON.stringify({
+        ...cleaned,
+        client_id: crypto.randomUUID(),
+      }),
+    });
+
+    setExpenses((previous) => [savedExpense, ...previous]);
+
+    closeModal();
+  } catch (error) {
+    setFormError(error.message || "Unable to save expense.");
+  }
+};
+
+const handleDelete = async (expense) => {
+  const confirmed = window.confirm(
+    `Are you sure you want to delete "${expense.title}"?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await expenseRequest(
+      `${EXPENSES_API}${expense.id}/`,
+      {
+        method: "DELETE",
+      }
+    );
 
     setExpenses((previous) =>
       previous.filter((item) => item.id !== expense.id)
     );
-  };
 
+  } catch (error) {
+    alert(error.message || "Unable to delete expense.");
+  }
+};
   const tooltipStyle = {
     backgroundColor: "var(--surface, #1c1c1c)",
     border: "1px solid #555555",
